@@ -172,19 +172,23 @@ def create_quiz(
             "creator_id": user.data['id'],
             "title": title,
             "description": description,
-            "is_public": is_public
+            # Always true for now, it should be associated to user API key, but that needs validation
+            "is_public": True,
+            # "is_public": is_public
         }
 
         quiz = _insert_quiz(quiz_data)
 
         if quiz is None:
             return {"success": False, "error": "Error creating quiz"}
+
+        quiz_id = quiz.data[0]['id']
         
         # Create questions
         questions_to_insert = []
         for question in questions:
             question_data = {
-                "quiz_id": quiz_response.data[0]['id'],
+                "quiz_id": quiz_id,
                 "question_type": question['question_type'],
                 "question_text": question['question_text'],
                 "question_data": question['question_data'],
